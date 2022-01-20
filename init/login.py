@@ -113,7 +113,7 @@ class GoLogin:
         """
         user, passwd = TickerConfig.USER, TickerConfig.PWD
         if not user or not passwd:
-            raise UserPasswordException(u"温馨提示: 用户名或者密码为空，请仔细检查")
+            raise UserPasswordException("温馨提示: 用户名或者密码为空，请仔细检查")
         login_num = 0
         while True:
             if loginConf(self.session):

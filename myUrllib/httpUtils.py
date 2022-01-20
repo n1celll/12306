@@ -5,7 +5,6 @@ import socket
 from collections import OrderedDict
 from time import sleep
 import requests
-from fake_useragent import UserAgent
 import TickerConfig
 from agency.agency_tools import proxy
 from config import logger
@@ -46,7 +45,7 @@ class HTTPClient(object):
         self._cdn = None
         self.cdnList = cdnList
         self._proxies = None
-        if is_proxy is 1:
+        if is_proxy == 1:
             self.proxy = proxy()
             self._proxies = self.proxy.setProxy()
             # print(u"设置当前代理ip为 {}, 请注意代理ip是否可用！！！！！请注意代理ip是否可用！！！！！请注意代理ip是否可用！！！！！".format(self._proxies))
@@ -139,7 +138,7 @@ class HTTPClient(object):
         else:
             method = "get"
             self.resetHeaders()
-        if TickerConfig.RANDOM_AGENT is 1:
+        if TickerConfig.RANDOM_AGENT == 1:
             self.setHeadersUserAgent()
         self.setHeadersReferer(urls["Referer"])
         if is_logger:
@@ -181,8 +180,12 @@ class HTTPClient(object):
                             logger.log(
                                 u"出参：{0}".format(response.content.decode()))
                         if urls["is_json"]:
-                            return json.loads(
-                                response.content.decode() if isinstance(response.content, bytes) else response.content)
+                            try:
+                                return json.loads(
+                                    response.content.decode() if isinstance(response.content, bytes) else response.content)
+                            except Exception as e:
+                                print(e)
+                                continue
                         else:
                             return response.content.decode("utf8", "ignore") if isinstance(response.content,
                                                                                            bytes) else response.content

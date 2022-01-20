@@ -76,7 +76,7 @@ class getPassengerDTOs:
         set_type = ""
         if wrapcache.get("user_info"):  # 如果缓存中有联系人方式，则读取缓存中的联系人
             user_info = wrapcache.get("user_info")
-            print(u"使用缓存中查找的联系人信息")
+            print("使用缓存中查找的联系人信息")
         else:
             user_info = self.sendGetPassengerDTOs()
             wrapcache.set("user_info", user_info, timeout=9999999)

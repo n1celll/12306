@@ -11,10 +11,10 @@ def loginConf(session):
     loginConfUrl = urls.get("loginConf")
     loginConfRsp = session.httpClint.send(urls=loginConfUrl, data={})
     if loginConfRsp and loginConfRsp.get("data", {}).get("is_login_passCode") == "N":
-        print(u"不需要验证码")
+        print("不需要验证码")
         return False
     else:
-        print(u"需要验证码")
+        print("需要验证码")
         return True
 
 
