@@ -124,8 +124,8 @@ class select:
         now = datetime.datetime.now()
         if TickerConfig.ORDER_MODEL == 1:
             print(f"预售还未开始，阻塞中，预售时间为{TickerConfig.OPEN_TIME}, 当前时间为: {now.strftime('%H:%M:%S')}")
-            sleep_time_s = 0.1
-            sleep_time_t = 0.3
+            sleep_time_s = 0.3
+            sleep_time_t = 0.5
             # 测试了一下有微妙级的误差，应该不影响，测试结果：2019-01-02 22:30:00.004555，预售还是会受到前一次刷新的时间影响，暂时没想到好的解决方案
             while now.strftime("%H:%M:%S") < TickerConfig.OPEN_TIME:
                 now = datetime.datetime.now()
@@ -226,7 +226,7 @@ class select:
                 break
             except ValueError as e:
                 if e == "No JSON object could be decoded":
-                    print(u"12306接口无响应，正在重试")
+                    print("12306接口无响应，正在重试")
                 else:
                     print(e)
             except KeyError as e:

@@ -178,7 +178,7 @@ class HTTPClient(object):
                     if response.content:
                         if is_logger:
                             logger.log(
-                                u"出参：{0}".format(response.content.decode()))
+                                f"出参：{response.content.decode()}")
                         if urls["is_json"]:
                             try:
                                 return json.loads(
@@ -193,7 +193,7 @@ class HTTPClient(object):
                         print(f"url: {urls['req_url']}返回参数为空, 接口状态码: {response.status_code}")
 
                         logger.log(
-                            u"url: {} 返回参数为空".format(urls["req_url"]))
+                            "url: {} 返回参数为空".format(urls["req_url"]))
                         if self.cdnList:
                             # 如果下单或者登陆出现cdn 302的情况，立马切换cdn
                             url_host = self.cdnList.pop(random.randint(0, 4))
