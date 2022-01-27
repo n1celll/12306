@@ -101,13 +101,13 @@ class autoSubmitOrderRequest:
                                        ifShowPassCodeTime=ifShowPassCodeTime,
                                        )
                 if ifShowPassCode == "Y":  # 如果需要验证码
-                    print(u"需要验证码")
-                    print(u"正在使用自动识别验证码功能")
+                    print("需要验证码")
+                    print("正在使用自动识别验证码功能")
                     for i in range(3):
                         randCode = getRandCode(is_auto_code=True, auto_code_type=2)
                         checkcode = checkRandCodeAnsyn(self.session, randCode, "")
                         if checkcode == 'TRUE':
-                            print(u"验证码通过,正在提交订单")
+                            print("验证码通过,正在提交订单")
                             data['randCode'] = randCode
                             break
                         else:

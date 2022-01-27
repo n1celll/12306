@@ -40,7 +40,7 @@ class GoLogin:
             return
         fresult = eval(fresult.split("(")[1].split(")")[0])
         if "result_code" in fresult and fresult["result_code"] == "4":
-            print(u"验证码通过,开始登录..")
+            print("验证码通过,开始登录..")
             return True
         else:
             if "result_message" in fresult:
@@ -65,7 +65,7 @@ class GoLogin:
 
         tresult = self.session.httpClint.send(logurl, loginData)
         if 'result_code' in tresult and tresult["result_code"] == 0:
-            print(u"登录成功")
+            print("登录成功")
             tk = self.auth()
             if "newapptk" in tk and tk["newapptk"]:
                 return tk["newapptk"]
@@ -73,11 +73,11 @@ class GoLogin:
                 return False
         elif 'result_message' in tresult and tresult['result_message']:
             messages = tresult['result_message']
-            if messages.find(u"密码输入错误") != -1:
+            if messages.find("密码输入错误") != -1:
                 raise UserPasswordException("{0}".format(messages))
             else:
-                print(u"登录失败: {0}".format(messages))
-                print(u"尝试重新登陆")
+                print("登录失败: {0}".format(messages))
+                print("尝试重新登陆")
                 return False
         else:
             return False
@@ -88,14 +88,14 @@ class GoLogin:
         :return:
         """
         if not uamtk:
-            return u"权限校验码不能为空"
+            return "权限校验码不能为空"
         else:
             uamauthclientUrl = self.session.urls["uamauthclient"]
             data = {"tk": uamtk}
             uamauthclientResult = self.session.httpClint.send(uamauthclientUrl, data)
             if uamauthclientResult:
                 if "result_code" in uamauthclientResult and uamauthclientResult["result_code"] == 0:
-                    print(u"欢迎 {} 登录".format(uamauthclientResult["username"]))
+                    print("欢迎 {} 登录".format(uamauthclientResult["username"]))
                     return True
                 else:
                     return False
@@ -117,7 +117,6 @@ class GoLogin:
         login_num = 0
         while True:
             if loginConf(self.session):
-
                 result = getPassCodeNewOrderAndLogin1(session=self.session, imgType="login")
                 if not result:
                     continue

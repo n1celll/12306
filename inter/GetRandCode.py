@@ -20,7 +20,7 @@ def getRandCode(is_auto_code, auto_code_type, result):
     try:
         if is_auto_code:
             if auto_code_type == 1:
-                print(u"打码兔已关闭, 如需使用自动识别，请使用如果平台 auto_code_type == 2")
+                print("打码兔已关闭, 如需使用自动识别，请使用如果平台 auto_code_type == 2")
                 return
             elif auto_code_type == 2:
                 Result = v.verify(result)
@@ -36,6 +36,7 @@ def getRandCode(is_auto_code, auto_code_type, result):
             img.show()
             return codexy()
     except Exception as e:
+        print(1123)
         print(e)
 
 

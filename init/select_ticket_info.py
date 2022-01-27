@@ -122,15 +122,25 @@ class select:
         wrapcache.set("user_info", passenger, timeout=9999999)
 
         now = datetime.datetime.now()
+        now_str = now.strftime("%Y-%m-%d %H:%M:%S")
         if TickerConfig.ORDER_MODEL == 1:
-            print(f"预售还未开始，阻塞中，预售时间为{TickerConfig.OPEN_TIME}, 当前时间为: {now.strftime('%H:%M:%S')}")
             sleep_time_s = 0.3
             sleep_time_t = 0.5
             # 测试了一下有微妙级的误差，应该不影响，测试结果：2019-01-02 22:30:00.004555，预售还是会受到前一次刷新的时间影响，暂时没想到好的解决方案
-            while now.strftime("%H:%M:%S") < TickerConfig.OPEN_TIME:
+            open_time = datetime.datetime.strptime(TickerConfig.OPEN_TIME, "%Y-%m-%d %H:%M:%S")
+            print(f'预售时间为{TickerConfig.OPEN_TIME}, 当前时间为: {now_str}')
+            start_try_time = now
+            advance_time = TickerConfig.ADVANCE_TIME
+            if not isinstance(advance_time, int) or advance_time < 0:
+                print("提前抢票时间设置错误，系统默认不提前")
+                advance_time = 0
+            if now + datetime.timedelta(seconds=advance_time) < open_time:
+                start_try_time = (open_time + datetime.timedelta(seconds=-advance_time))
+                print(f'将在 {start_try_time.strftime("%Y-%m-%d %H:%M:%S")} 开始抢票')
+            while now < start_try_time:
                 now = datetime.datetime.now()
                 time.sleep(0.0001)
-            print(f"预售开始，开启时间为: {now.strftime('%H:%M:%S')}")
+            print(f"抢票开始，预售开启时间为: {open_time}")
         else:
             sleep_time_s = TickerConfig.MIN_TIME
             sleep_time_t = TickerConfig.MAX_TIME

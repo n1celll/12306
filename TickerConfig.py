@@ -5,11 +5,13 @@
 # 如果这个时候捡漏捡到的话，也是可以付款成功的，也就是说，捡漏+候补，可以最大程度提升抢票成功率
 
 # 刷票模式：1=刷票 2=候补+刷票
-TICKET_TYPE = 1
+TICKET_TYPE = 2
+
 
 # 出发日期(list) "2018-01-06", "2018-01-07"
 STATION_DATES = [
-    "2020-01-18"
+    "2022-01-30",
+    # "2022-01-31",
 ]
 
 # 填入需要购买的车次(list)，"G1353"
@@ -59,12 +61,12 @@ IS_AUTO_CODE = True
 AUTO_CODE_TYPE = 3
 
 # 此处设置云打码服务器地址，如果有自建的服务器，可以自行更改
-HOST = "120.77.154.140:8000"
-REQ_URL = "/verify/base64/"
-HTTP_TYPE = "http"
-# HOST="12306.yinaoxiong.cn" #备用服务器稳定性较差
-# REQ_URL="/verify/base64/"
-# HTTP_TYPE="https"
+# HOST = "captcha:80"
+# REQ_URL = "/verify/base64/"
+# HTTP_TYPE = "http"
+HOST="12306.yinaoxiong.cn" #备用服务器稳定性较差
+REQ_URL="/verify/base64/"
+HTTP_TYPE="https"
 
 #  邮箱配置，如果抢票成功，将通过邮件配置通知给您
 #  列举163
@@ -113,7 +115,11 @@ ORDER_MODEL = 1
 IS_PROXY = 0
 
 # 预售放票时间, 如果是捡漏模式，可以忽略此操作
-OPEN_TIME = "12:59:57"
+OPEN_TIME = "2022-01-28 08:00:00"
+# OPEN_TIME = "2022-01-27 15:09:00"
+# 系统有可能提前放票，提前多少秒开始尝试（10分钟：600 半小时：1800）
+ADVANCE_TIME = 1800
+
 # 1=使用selenium获取devicesID
 # 2=使用网页端/otn/HttpZF/logdevice获取devicesId，这个接口的算法目前可能有点问题，如果登录一直302的请改为配置1
 # 3=自己打开浏览器在headers-Cookies中抓取RAIL_DEVICEID和RAIL_EXPIRATION，这个就不用配置selenium
@@ -154,4 +160,5 @@ MAX_TIME = 3
 MIN_TIME = 1
 
 # 软件版本
-RE_VERSION = "1.2.004"
+# RE_VERSION = "1.2.004"
+RE_VERSION = "1.3"

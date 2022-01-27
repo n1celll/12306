@@ -23,7 +23,7 @@ if __name__ == '__main__':
     elif args.operate == "t":
         from config.emailConf import sendEmail
         from config.serverchanConf import sendServerChan
-        sendEmail(u"订票小助手测试一下")
+        sendEmail("订票小助手测试一下")
         sendServerChan("订票小助手测试一下")
     elif args.operate == "c":
         from agency.cdn_utils import filterCdn
