@@ -29,6 +29,7 @@ class confirmHB:
         data["jzParam"] = self.jzdhDate
         data["hbTrain"] = f"{self.tickerNo},{ticker}#"
         data["lkParam"] = ""
+        data["realize_limit_time_diff"] = TickerConfig.REALIZE_LIMIT_TIME * 60 # 候补截止时间
         return data
 
     def sendChechFace(self):

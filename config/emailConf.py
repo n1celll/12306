@@ -38,7 +38,7 @@ def sendEmail(msg):
             smtp.login(username, password)
             smtp.sendmail(sender, receiver.split(","), msg.as_string())
             smtp.quit()
-            print(u"邮件已通知, 请查收")
+            print("邮件已通知, 请查收")
     except Exception as e:
         print(u"邮件配置有误{}".format(e))
 

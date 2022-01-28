@@ -106,10 +106,32 @@ class select:
             configCommon.checkSleepTime(self)  # 防止网上启动晚上到点休眠
             self.login.go_login()
 
+    def check_start_time(self):
+        now = datetime.datetime.now()
+        now_str = now.strftime("%Y-%m-%d %H:%M:%S")
+        print(f'当前时间为: {now_str}')
+        try:
+            open_time = datetime.datetime.strptime(TickerConfig.OPEN_TIME, "%Y-%m-%d %H:%M:%S")
+            print(f'预售时间为：{TickerConfig.OPEN_TIME}, ')
+        except Exception:
+            open_time = now
+            print("预售时间格式错误, 系统将立即开始抢票")
+        advance_time = TickerConfig.ADVANCE_TIME
+        if now + datetime.timedelta(seconds=advance_time) < open_time:
+            start_try_time = (open_time + datetime.timedelta(seconds=-advance_time))
+            print(f'将在 {start_try_time.strftime("%Y-%m-%d %H:%M:%S")} 开始抢票')
+            while now < start_try_time:
+                now = datetime.datetime.now()
+                time.sleep(0.0001)
+        print(f"抢票开始，预售开启时间为: {open_time}")
+
     def main(self):
         l = liftTicketInit(self)
         l.reqLiftTicketInit()
         getDrvicesID(self)
+        advance_time = TickerConfig.ADVANCE_TIME
+        if isinstance(advance_time, int) and advance_time > 0:
+            self.check_start_time()
         self.call_login()
         check_user = checkUser(self)
         t = threading.Thread(target=check_user.sendCheckUser)
@@ -120,27 +142,9 @@ class select:
         s = getPassengerDTOs(selectObj=self, ticket_peoples=TickerConfig.TICKET_PEOPLES)
         passenger = s.sendGetPassengerDTOs()
         wrapcache.set("user_info", passenger, timeout=9999999)
-
-        now = datetime.datetime.now()
-        now_str = now.strftime("%Y-%m-%d %H:%M:%S")
         if TickerConfig.ORDER_MODEL == 1:
             sleep_time_s = 0.3
             sleep_time_t = 0.5
-            # 测试了一下有微妙级的误差，应该不影响，测试结果：2019-01-02 22:30:00.004555，预售还是会受到前一次刷新的时间影响，暂时没想到好的解决方案
-            open_time = datetime.datetime.strptime(TickerConfig.OPEN_TIME, "%Y-%m-%d %H:%M:%S")
-            print(f'预售时间为{TickerConfig.OPEN_TIME}, 当前时间为: {now_str}')
-            start_try_time = now
-            advance_time = TickerConfig.ADVANCE_TIME
-            if not isinstance(advance_time, int) or advance_time < 0:
-                print("提前抢票时间设置错误，系统默认不提前")
-                advance_time = 0
-            if now + datetime.timedelta(seconds=advance_time) < open_time:
-                start_try_time = (open_time + datetime.timedelta(seconds=-advance_time))
-                print(f'将在 {start_try_time.strftime("%Y-%m-%d %H:%M:%S")} 开始抢票')
-            while now < start_try_time:
-                now = datetime.datetime.now()
-                time.sleep(0.0001)
-            print(f"抢票开始，预售开启时间为: {open_time}")
         else:
             sleep_time_s = TickerConfig.MIN_TIME
             sleep_time_t = TickerConfig.MAX_TIME
@@ -242,7 +246,7 @@ class select:
             except KeyError as e:
                 print(e)
             except TypeError as e:
-                print(u"12306接口无响应，正在重试 {0}".format(e))
+                print("12306接口无响应，正在重试 {0}".format(e))
             except socket.error as e:
                 print(e)
 

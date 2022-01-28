@@ -127,13 +127,13 @@ class query:
                                             if ticket_num != "有" and self.ticke_peoples_num > ticket_num:
                                                 if TickerConfig.IS_MORE_TICKET:
                                                     print(
-                                                        u"余票数小于乘车人数，当前余票数: {}, 删减人车人数到: {}".format(ticket_num, ticket_num))
+                                                        "余票数小于乘车人数，当前余票数: {}, 删减人车人数到: {}".format(ticket_num, ticket_num))
                                                     is_more_ticket_num = ticket_num
                                                 else:
-                                                    print(u"余票数小于乘车人数，当前设置不提交，放弃此次提交机会")
+                                                    print("余票数小于乘车人数，当前设置不提交，放弃此次提交机会")
                                                     continue
                                             else:
-                                                print(u"设置乘车人数为: {}".format(self.ticke_peoples_num))
+                                                print("设置乘车人数为: {}".format(self.ticke_peoples_num))
                                                 is_more_ticket_num = self.ticke_peoples_num
                                             print(ticket.QUERY_C)
                                             return {
@@ -151,7 +151,7 @@ class query:
                                                 "cdn": self.httpClint.cdn,
                                                 "status": True,
                                             }
-                                elif is_ticket_pass == '无' and ticket_info[37] == "1" and TickerConfig.TICKET_TYPE is 2:
+                                elif is_ticket_pass == '无' and ticket_info[37] == "1" and TickerConfig.TICKET_TYPE == 2:
                                     """
                                     is_ticket_pass如果有别的显示，但是可以候补，可以提issues提出来，附上query log，我将添加上
                                     判断车次是否可以候补
@@ -180,7 +180,7 @@ class query:
                                                     "cdn": self.httpClint.cdn,
                                                 }
                 else:
-                    print(u"车次配置信息有误，或者返回数据异常，请检查 {}".format(station_ticket))
+                    print("车次配置信息有误，或者返回数据异常，请检查 {}".format(station_ticket))
         self.session.flag = False
         return {"code": ticket.FAIL_CODE, "status": False, "cdn": self.httpClint.cdn, }
 
