@@ -5,10 +5,10 @@
 
 ### 新增功能
 ##### 1. 设置候补截止时间，候补模式下必须设置候补截止时间，默认为发车前 **2小时**。
-![](https://django.pub/media/editor/1643530205787_20220130161006020250.png)
+![image](https://user-images.githubusercontent.com/48384746/151692511-a5f40c5a-a489-4985-ac20-b59746715bda.png)
 
 ##### 2. 预售模式下设置预售时间，和提前开始抢票，设置为 0 则不提前。
-![](https://django.pub/media/editor/1643530361886_20220130161242167795.png )
+![image](https://user-images.githubusercontent.com/48384746/151692524-45166b64-3f92-4c8d-a66d-36a607fe8e61.png)
 
 ------------
 #### python版本
