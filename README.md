@@ -1,5 +1,7 @@
 ### 12306 购票小助手
 
+> 该项目完全克隆自 testerSunshine 开源的[12306抢票脚本](https://github.com/testerSunshine/12306 "testerSunshine")，由于作者不再维护，故克隆此项目，并修复部分bug，即可抢票成功。
+
 ------------
 ### 2022.01.28 更新
 
