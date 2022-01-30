@@ -8,9 +8,10 @@
 ![image](https://user-images.githubusercontent.com/48384746/151692511-a5f40c5a-a489-4985-ac20-b59746715bda.png)
 
 ##### 2. 预售模式下设置预售时间，和提前开始抢票，设置为 0 则不提前。
-![image](https://user-images.githubusercontent.com/48384746/151692524-45166b64-3f92-4c8d-a66d-36a607fe8e61.png)
+![image](https://user-images.githubusercontent.com/48384746/151692561-776b003e-a889-422e-83fa-95b567021d0b.png)
 
 ------------
+## 原 README.md 如下：
 #### python版本
   - [ ] 2.7.10 - 2.7.15
   - [x] 3.6 - 3.7.4
