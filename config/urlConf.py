@@ -52,7 +52,7 @@ urls = {
         "Content-Type": 1,
         "re_try": 10,
         "re_time": 1,
-        "s_time": 0.1,
+        "s_time": 0.5,
         "is_logger": False,
         "is_cdn": True,
         "is_json": False,

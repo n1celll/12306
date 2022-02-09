@@ -127,7 +127,8 @@ class select:
 
     def main(self):
         l = liftTicketInit(self)
-        l.reqLiftTicketInit()
+        if not l.reqLiftTicketInit():
+            return print('程序启动失败，请稍后重试...')
         getDrvicesID(self)
         advance_time = TickerConfig.ADVANCE_TIME
         if isinstance(advance_time, int) and advance_time > 0:

@@ -14,11 +14,14 @@ class liftTicketInit:
         urls = self.session.urls["left_ticket_init"]
         # 获取初始化的结果
         result = self.session.httpClint.send(urls)
-        # 用正则表达式查出CLeftTicketUrl的值
-        matchObj = re.search('var CLeftTicketUrl = \'(.*)\'', result, re.M|re.I)
-        if matchObj:
-            # 如果有值，替换queryUrl
-            self.session.queryUrl = matchObj.group(1)
-        return {
-            "status": True
-        }
+        try:
+            # 用正则表达式查出CLeftTicketUrl的值
+            match_obj = re.search('var CLeftTicketUrl = \'(.*)\'', result, re.M | re.I)
+            if match_obj:
+                # 如果有值，替换queryUrl
+                self.session.queryUrl = match_obj.group(1)
+                return True
+        except Exception:
+            return
+
+

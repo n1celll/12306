@@ -10,50 +10,37 @@ from agency.agency_tools import proxy
 from config import logger
 
 
-def _set_header_default():
-    header_dict = OrderedDict()
-    # header_dict["Accept"] = "application/json, text/plain, */*"
-    header_dict["Accept-Encoding"] = "gzip, deflate"
-    header_dict[
-        "User-Agent"] = _set_user_agent()
-    header_dict["Content-Type"] = "application/x-www-form-urlencoded; charset=UTF-8"
-    header_dict["Origin"] = "https://kyfw.12306.cn"
-    header_dict["Connection"] = "keep-alive"
-    return header_dict
-
-
-def _set_user_agent():
-    # try:
-    #     user_agent = UserAgent(verify_ssl=False).random
-    #     return user_agent
-    # except:
-    #     print("请求头设置失败，使用默认请求头")
-    #     return 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.' + str(
-    #         random.randint(5000, 7000)) + '.0 Safari/537.36'
-    return "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36"
-
-
 class HTTPClient(object):
 
-    def __init__(self, is_proxy, cdnList=None):
+    def __init__(self, is_proxy, cdn_list=None):
         """
         cdnList试试切换不包括查询的cdn，防止查询cdn污染登陆和下单cdn
-        :param method:
-        :param headers: Must be a dict. Such as headers={'Content_Type':'text/html'}
+        :param is_proxy: 是否使用代理
         """
-        self.initS()
+        self._s = requests.Session()
+        self._s.headers.update(self._set_header_default())
         self._cdn = None
-        self.cdnList = cdnList
+        self.cdnList = cdn_list
         self._proxies = None
         if is_proxy == 1:
             self.proxy = proxy()
             self._proxies = self.proxy.setProxy()
             # print(u"设置当前代理ip为 {}, 请注意代理ip是否可用！！！！！请注意代理ip是否可用！！！！！请注意代理ip是否可用！！！！！".format(self._proxies))
 
-    def initS(self):
-        self._s = requests.Session()
-        self._s.headers.update(_set_header_default())
-        return self
+    @staticmethod
+    def get_user_agent():
+        return f'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) ' \
+               f'Chrome/97.0.{str(random.randint(5000, 7000))}.99 Safari/537.36'
+
+    def _set_header_default(self):
+        header_dict = OrderedDict()
+        header_dict["Accept-Encoding"] = "gzip, deflate"
+        header_dict[
+            "User-Agent"] = self.get_user_agent()
+        header_dict["Content-Type"] = "application/x-www-form-urlencoded; charset=UTF-8"
+        header_dict["Origin"] = "https://kyfw.12306.cn"
+        header_dict["Connection"] = "keep-alive"
+        return header_dict
 
     def set_cookies(self, kwargs):
         """
@@ -86,31 +73,31 @@ class HTTPClient(object):
         """
         self._s.cookies.set(key, None)
 
-    def setHeaders(self, headers):
+    def set_headers(self, headers):
         self._s.headers.update(headers)
         return self
 
-    def resetHeaders(self):
+    def reset_headers(self):
         self._s.headers.clear()
-        self._s.headers.update(_set_header_default())
+        self._s.headers.update(self._set_header_default())
 
-    def getHeadersHost(self):
+    def get_headers_host(self):
         return self._s.headers["Host"]
 
-    def setHeadersHost(self, host):
+    def set_headers_host(self, host):
         self._s.headers.update({"Host": host})
         return self
 
-    def setHeadersUserAgent(self):
-        self._s.headers.update({"User-Agent": _set_user_agent()})
+    def set_headers_user_agent(self):
+        self._s.headers.update({"User-Agent": self.get_user_agent()})
 
-    def getHeadersUserAgent(self):
+    def get_headers_user_agent(self):
         return self._s.headers["User-Agent"]
 
-    def getHeadersReferer(self):
+    def get_headers_referer(self):
         return self._s.headers["Referer"]
 
-    def setHeadersReferer(self, referer):
+    def set_headers_referer(self, referer):
         self._s.headers.update({"Referer": referer})
         return self
 
@@ -131,20 +118,20 @@ class HTTPClient(object):
         s_time = urls.get("s_time", 0)
         is_cdn = urls.get("is_cdn", False)
         is_test_cdn = urls.get("is_test_cdn", False)
-        error_data = {"code": 99999, "message": u"重试次数达到上限"}
+        error_data = {"code": 99999, "message": "重试次数达到上限"}
         if data:
             method = "post"
-            self.setHeaders({"Content-Length": "{0}".format(len(data))})
+            self.set_headers({"Content-Length": "{0}".format(len(data))})
         else:
             method = "get"
-            self.resetHeaders()
+            self.reset_headers()
         if TickerConfig.RANDOM_AGENT == 1:
-            self.setHeadersUserAgent()
-        self.setHeadersReferer(urls["Referer"])
+            self.set_headers_user_agent()
+        self.set_headers_referer(urls["Referer"])
         if is_logger:
             logger.log(
                 u"url: {0}\n入参: {1}\n请求方式: {2}\n".format(req_url, data, method))
-        self.setHeadersHost(urls["Host"])
+        self.set_headers_host(urls["Host"])
         if is_test_cdn:
             url_host = self._cdn
         elif is_cdn:
@@ -162,7 +149,7 @@ class HTTPClient(object):
                 sleep(s_time)
                 try:
                     requests.packages.urllib3.disable_warnings()
-                except:
+                except Exception:
                     pass
                 response = self._s.request(method=method,
                                            timeout=5,
@@ -182,7 +169,8 @@ class HTTPClient(object):
                         if urls["is_json"]:
                             try:
                                 return json.loads(
-                                    response.content.decode() if isinstance(response.content, bytes) else response.content)
+                                    response.content.decode()
+                                    if isinstance(response.content, bytes) else response.content)
                             except Exception as e:
                                 print(e)
                                 continue
